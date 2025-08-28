@@ -94,7 +94,7 @@ const userTimetableSchema = new mongoose.Schema({
 });
 
 // Index for efficient queries
-userTimetableSchema.index({ userId: 1, baseTimetableId: 1 });
+userTimetableSchema.index({ baseTimetableId: 1 });
 
 // Method to get combined timetable (base + custom)
 userTimetableSchema.methods.getCombinedTimetable = async function() {

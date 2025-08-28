@@ -119,7 +119,6 @@ const assignmentSchema = new mongoose.Schema({
 assignmentSchema.index({ assignedTo: 1, dueDate: 1 });
 assignmentSchema.index({ assignedTo: 1, status: 1 });
 assignmentSchema.index({ dueDate: 1 });
-assignmentSchema.index({ googleClassroomId: 1 });
 
 // Virtual for days until due
 assignmentSchema.virtual('daysUntilDue').get(function() {
