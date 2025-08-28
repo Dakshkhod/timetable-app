@@ -444,4 +444,125 @@ router.post('/google', auth, async (req, res) => {
   }
 });
 
+// Mobile Google OAuth endpoint
+router.post('/google/mobile', async (req, res) => {
+  try {
+    const { authorizationCode, redirectUri } = req.body;
+    
+    if (!authorizationCode) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Authorization code is required' 
+      });
+    }
+
+    console.log('📱 Mobile Google OAuth - Processing authorization code...');
+
+    // Exchange authorization code for tokens
+    const tokenData = await getTokensFromCode(authorizationCode, redirectUri);
+    
+    if (!tokenData) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Failed to exchange authorization code for tokens' 
+      });
+    }
+
+    // Get user info from Google
+    const oauth2 = google.oauth2({ version: 'v2', auth: oauth2Client });
+    oauth2Client.setCredentials(tokenData);
+    
+    const userInfoResponse = await oauth2.userinfo.get();
+    const googleUser = userInfoResponse.data;
+
+    if (!googleUser.email) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Failed to get user email from Google' 
+      });
+    }
+
+    console.log('📱 Mobile Google OAuth - User info received:', googleUser.email);
+
+    // Check if user exists
+    let user = await User.findOne({ email: googleUser.email });
+
+    if (!user) {
+      // Create new user from Google data
+      console.log('📱 Creating new user from Google data...');
+      user = await User.create({
+        email: googleUser.email,
+        firstName: googleUser.given_name || 'User',
+        lastName: googleUser.family_name || '',
+        name: googleUser.name || `${googleUser.given_name} ${googleUser.family_name}`,
+        profilePicture: googleUser.picture,
+        isActive: true,
+        authProvider: 'google',
+        googleId: googleUser.id,
+        // Set default academic info
+        branch: 'Computer Science',
+        year: 1,
+        rollNumber: `GOOGLE_${Date.now()}`,
+      });
+    } else {
+      // Update existing user with Google data
+      user.googleId = googleUser.id;
+      user.profilePicture = googleUser.picture;
+      user.authProvider = 'google';
+      await user.save();
+    }
+
+    // Store Google tokens for API access
+    user.googleTokens = {
+      accessToken: tokenData.access_token,
+      refreshToken: tokenData.refresh_token,
+      expiryDate: new Date(Date.now() + (tokenData.expires_in * 1000)),
+    };
+    await user.save();
+
+    // Generate JWT token
+    const jwtToken = jwt.sign(
+      { 
+        userId: user._id,
+        email: user.email,
+        authProvider: 'google'
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
+    );
+
+    // Set session
+    req.session.userId = user._id;
+    req.session.save();
+
+    console.log('✅ Mobile Google OAuth successful for:', user.email);
+
+    res.json({
+      success: true,
+      message: 'Google authentication successful',
+      user: {
+        id: user._id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        name: user.name,
+        profilePicture: user.profilePicture,
+        branch: user.branch,
+        year: user.year,
+        rollNumber: user.rollNumber,
+        authProvider: user.authProvider,
+      },
+      token: jwtToken,
+    });
+
+  } catch (error) {
+    console.error('❌ Mobile Google OAuth error:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Google authentication failed',
+      error: process.env.NODE_ENV === 'development' ? error.message : 'Internal server error'
+    });
+  }
+});
+
 module.exports = router; 
