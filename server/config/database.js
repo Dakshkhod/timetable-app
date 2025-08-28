@@ -5,11 +5,12 @@ const connectDB = async () => {
     const conn = await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/smart-timetable', {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      ssl: false,
-      sslValidate: false,
-      tls: false,
-      tlsAllowInvalidCertificates: true,
-      tlsAllowInvalidHostnames: true,
+      // Modern MongoDB connection options
+      maxPoolSize: 10,
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 45000,
+      bufferCommands: false,
+      bufferMaxEntries: 0,
     });
 
     console.log(`📦 MongoDB Connected: ${conn.connection.host}`);

@@ -9,9 +9,7 @@ const MongoStore = require('connect-mongo');
 const winston = require('winston');
 const connectDB = require('./config/database');
 
-// Force HTTP mode and disable SSL
-process.env.HTTPS = 'false';
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+// Production environment setup
 
 // Import security middleware
 const {
