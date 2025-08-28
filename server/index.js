@@ -9,10 +9,11 @@ const MongoStore = require('connect-mongo');
 const winston = require('winston');
 const connectDB = require('./config/database');
 
-// Production environment setup
+// Railway environment setup
 // Force disable SSL certificate validation for Railway deployment
-if (process.env.NODE_ENV === 'production') {
+if (process.env.RAILWAY_ENVIRONMENT || process.env.NODE_ENV === 'production') {
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+  console.log('🚂 Railway deployment detected - SSL validation disabled');
 }
 
 // Import security middleware
@@ -159,13 +160,31 @@ app.use(session({
     maxAge: 15 * 60 * 1000, // 15 minutes
     sameSite: 'lax' // Changed from 'strict' to prevent issues
   },
-  store: MongoStore.create({
-    mongoUrl: process.env.MONGODB_URI,
-    touchAfter: 24 * 3600, // lazy session update
-    crypto: {
-      secret: process.env.SESSION_SECRET || 'fallback-secret-change-in-production'
+  store: (() => {
+    try {
+      // Try to create MongoDB session store
+      if (process.env.MONGODB_URI) {
+        return MongoStore.create({
+          mongoUrl: process.env.MONGODB_URI,
+          touchAfter: 24 * 3600, // lazy session update
+          crypto: {
+            secret: process.env.SESSION_SECRET || 'fallback-secret-change-in-production'
+          },
+          // Railway-specific MongoDB store options
+          mongoOptions: {
+            ssl: true,
+            sslValidate: false,
+            tlsAllowInvalidCertificates: true,
+            tlsAllowInvalidHostnames: true,
+            serverSelectionTimeoutMS: 5000,
+          }
+        });
+      }
+    } catch (error) {
+      console.warn('⚠️  MongoDB session store failed, using memory store');
     }
-  })
+    return undefined; // Falls back to memory store
+  })()
 }));
 
 // Timing attack protection for auth routes
