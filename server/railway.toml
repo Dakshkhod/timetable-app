@@ -8,5 +8,10 @@ healthcheckTimeout = 300
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 10
 
+# Force no build process
+[build.envs]
+NIXPACKS_BUILD_CMD = ""
+NIXPACKS_INSTALL_CMD = "npm ci --only=production"
+
 [deploy.envs]
 NODE_ENV = "production"
