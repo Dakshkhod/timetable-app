@@ -9,3 +9,10 @@ cmds = []
 
 [start]
 cmd = "npm start"
+
+# Override any existing build scripts
+[phases.preBuild]
+cmds = []
+
+[phases.postBuild]
+cmds = []

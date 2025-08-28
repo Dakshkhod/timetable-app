@@ -8,7 +8,6 @@
     "server": "nodemon server/index.js",
     "test-server": "node server/test-server.js",
     "client": "cd client && npm start",
-    "build": "cd client && npm run build",
     "install-all": "npm install && cd client && npm install",
     "start": "node server/index.js",
     "seed": "node server/scripts/seedTimetables.js",
