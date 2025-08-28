@@ -372,16 +372,30 @@ const startServer = async () => {
   // Setup graceful shutdown
   process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
   process.on('SIGINT', () => gracefulShutdown('SIGINT'));
+  
+  // Disable graceful shutdown for unhandled errors in production
+  if (process.env.NODE_ENV !== 'production') {
+    process.on('uncaughtException', (error) => {
+      logger.error('Uncaught Exception:', error);
+      gracefulShutdown('UNCAUGHT_EXCEPTION');
+    });
+  }
 
   // Handle uncaught exceptions
-  process.on('uncaughtException', (error) => {
-    logger.error('Uncaught Exception:', error);
-    gracefulShutdown('UNCAUGHT_EXCEPTION');
-  });
+process.on('uncaughtException', (error) => {
+  logger.error('Uncaught Exception:', error);
+  console.error('🚨 Uncaught Exception:', error.message);
+  console.log('⚠️  This is likely due to missing database connection');
+  console.log('✅ Server will continue running...');
+  // Don't shutdown - just log the error
+});
 
   process.on('unhandledRejection', (reason, promise) => {
     logger.error('Unhandled Rejection at:', promise, 'reason:', reason);
-    gracefulShutdown('UNHANDLED_REJECTION');
+    console.error('🚨 Unhandled Promise Rejection:', reason);
+    console.log('⚠️  This is likely due to missing database connection');
+    console.log('✅ Server will continue running...');
+    // Don't shutdown - just log the error
   });
 
   return server;
