@@ -2,23 +2,30 @@ const mongoose = require('mongoose');
 
 const connectDB = async () => {
   try {
-    // Force disable SSL certificate validation in production environment
-    if (process.env.NODE_ENV === 'production') {
-      process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+    // Force disable ALL SSL certificate validation
+    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+    
+    let mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/smart-timetable';
+    
+    // For Railway deployment - use connection string without SSL requirements
+    if (mongoUri.includes('mongodb+srv://')) {
+      // Remove SSL parameters and use basic connection
+      mongoUri = mongoUri.split('?')[0]; // Remove all query parameters
+      mongoUri += '?ssl=false&tls=false';
     }
     
-    const mongoOptions = {};
+    const mongoOptions = {
+      ssl: false,
+      tls: false,
+      sslValidate: false,
+      tlsAllowInvalidCertificates: true,
+      tlsAllowInvalidHostnames: true,
+      serverSelectionTimeoutMS: 5000, // Fail fast if can't connect
+    };
     
-    // Add SSL bypass options for Railway deployment
-    if (process.env.MONGODB_URI && process.env.MONGODB_URI.includes('mongodb+srv')) {
-      mongoOptions.ssl = false;
-      mongoOptions.tls = false;
-    }
+    console.log('🔄 Attempting MongoDB connection without SSL...');
     
-    const conn = await mongoose.connect(
-      process.env.MONGODB_URI || 'mongodb://localhost:27017/smart-timetable',
-      mongoOptions
-    );
+    const conn = await mongoose.connect(mongoUri, mongoOptions);
 
     console.log(`📦 MongoDB Connected: ${conn.connection.host}`);
     

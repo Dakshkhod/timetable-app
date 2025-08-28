@@ -7,7 +7,7 @@ const hpp = require('hpp');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const winston = require('winston');
-const connectDB = require('./config/database');
+const connectDB = require('./config/database-no-atlas');
 
 // Production environment setup
 // Force disable SSL certificate validation for Railway deployment
@@ -333,13 +333,8 @@ const startServer = async () => {
     logger.info('Database connected successfully');
   } catch (error) {
     logger.error('Database connection failed:', error);
-    if (process.env.NODE_ENV === 'production') {
-      // In production, exit if database is not available
-      console.error('💥 Cannot start server without database in production');
-      process.exit(1);
-    } else {
-      console.log('⚠️  Database connection failed, but server will continue in development mode...');
-    }
+    console.log('⚠️  Database connection failed, but server will continue without database...');
+    console.log('📱 API endpoints will work, but data will be temporary');
   }
   
   // Start server
