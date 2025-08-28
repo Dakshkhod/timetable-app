@@ -1,0 +1,117 @@
+# ========================================
+# SMART TIMETABLE APP - GITIGNORE
+# ========================================
+
+# ========================================
+# ENVIRONMENT & SECRETS
+# ========================================
+.env
+.env.local
+.env.production
+.env.test
+!.env.example
+*.pem
+*.key
+*.crt
+config/secrets.json
+
+# ========================================
+# DEPENDENCIES
+# ========================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ========================================
+# PRODUCTION BUILD FILES
+# ========================================
+/build
+/dist
+/out
+
+# ========================================
+# DEVELOPMENT FILES
+# ========================================
+.DS_Store
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ========================================
+# LOGS
+# ========================================
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+server/logs/
+
+# ========================================
+# RUNTIME & TEMP FILES
+# ========================================
+pids/
+*.pid
+*.seed
+*.pid.lock
+*.tmp
+*.temp
+
+# ========================================
+# COVERAGE & TESTING
+# ========================================
+coverage/
+.nyc_output/
+.coverage/
+*.lcov
+
+# ========================================
+# DATABASE & CACHE
+# ========================================
+*.sqlite
+*.sqlite3
+*.db
+.cache/
+
+# ========================================
+# DEPLOYMENT & DOCKER
+# ========================================
+docker-compose.override.yml
+.dockerignore
+Dockerfile.local
+
+# ========================================
+# SECURITY SCAN RESULTS
+# ========================================
+.snyk
+security-scan-results/
+*.sarif
+
+# ========================================
+# EDITOR CONFIG
+# ========================================
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# ========================================
+# OS SPECIFIC
+# ========================================
+Thumbs.db
+Desktop.ini
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# ========================================
+# BACKUP FILES
+# ========================================
+*.bak
+*.backup
+*.old
