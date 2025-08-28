@@ -1,5 +1,7 @@
 const express = require('express');
-const { MockAssignment: Assignment, MockTimetable: Timetable, MockUser: User } = require('../models/User-mock');
+const Assignment = require('../models/Assignment');
+const Timetable = require('../models/Timetable');
+const User = require('../models/User');
 const auth = require('../middleware/auth');
 const GoogleClassroomService = require('../services/googleClassroom');
 const { refreshAccessToken } = require('../config/google');

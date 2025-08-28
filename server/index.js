@@ -7,7 +7,7 @@ const hpp = require('hpp');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const winston = require('winston');
-const connectDB = require('./config/database-no-atlas');
+const connectDB = require('./config/database');
 
 // Production environment setup
 // Force disable SSL certificate validation for Railway deployment
@@ -159,14 +159,13 @@ app.use(session({
     maxAge: 15 * 60 * 1000, // 15 minutes
     sameSite: 'lax' // Changed from 'strict' to prevent issues
   },
-  // Temporarily disabled MongoDB session store due to SSL issues
-  // store: MongoStore.create({
-  //   mongoUrl: process.env.MONGODB_URI,
-  //   touchAfter: 24 * 3600, // lazy session update
-  //   crypto: {
-  //     secret: process.env.SESSION_SECRET || 'fallback-secret-change-in-production'
-  //   }
-  // })
+  store: MongoStore.create({
+    mongoUrl: process.env.MONGODB_URI,
+    touchAfter: 24 * 3600, // lazy session update
+    crypto: {
+      secret: process.env.SESSION_SECRET || 'fallback-secret-change-in-production'
+    }
+  })
 }));
 
 // Timing attack protection for auth routes

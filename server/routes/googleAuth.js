@@ -1,7 +1,7 @@
 const express = require('express');
 const { generateAuthUrl, getTokensFromCode, refreshAccessToken } = require('../config/google');
 const GoogleClassroomService = require('../services/googleClassroom');
-const { MockUser: User } = require('../models/User-mock');
+const User = require('../models/User');
 const auth = require('../middleware/auth');
 
 const router = express.Router();
