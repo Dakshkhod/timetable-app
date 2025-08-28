@@ -1,0 +1,48 @@
+{
+  "name": "smart-timetable-server",
+  "version": "1.0.0",
+  "description": "Smart Timetable Backend Server",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "timetable",
+    "nodejs",
+    "express",
+    "mongodb",
+    "api"
+  ],
+  "author": "Smart Timetable Team",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "compression": "^1.7.4",
+    "morgan": "^1.10.0",
+    "express-mongo-sanitize": "^2.2.0",
+    "hpp": "^0.2.3",
+    "express-session": "^1.17.3",
+    "connect-mongo": "^5.0.0",
+    "winston": "^3.10.0",
+    "mongoose": "^7.5.0",
+    "dotenv": "^16.3.1",
+    "helmet": "^7.0.0",
+    "express-rate-limit": "^6.10.0",
+    "jsonwebtoken": "^9.0.2",
+    "bcryptjs": "^2.4.3",
+    "googleapis": "^126.0.1",
+    "nodemailer": "^6.9.4",
+    "multer": "^1.4.5-lts.1",
+    "sharp": "^0.32.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  }
+}

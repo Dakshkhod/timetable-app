@@ -62,15 +62,21 @@ mongodb+srv://timetable_user:YourPassword123@cluster0.abc123.mongodb.net/timetab
 In Railway dashboard, add these variables:
 
 ```bash
+# Copy from your web app
 MONGODB_URI=mongodb+srv://timetable_user:YourPassword123@cluster0.abc123.mongodb.net/timetable_db?retryWrites=true&w=majority
-JWT_SECRET=your-super-secure-jwt-secret-key-here
-JWT_REFRESH_SECRET=your-super-secure-refresh-secret-key-here
 GOOGLE_CLIENT_ID=your-google-client-id
 GOOGLE_CLIENT_SECRET=your-google-client-secret
-GOOGLE_REDIRECT_URI=https://your-app.railway.app/api/auth/google/callback
+
+# Generated secrets (use generate-secret.vercel.app/32)
+JWT_SECRET=your-generated-jwt-secret
+JWT_REFRESH_SECRET=your-generated-refresh-secret
+SESSION_SECRET=your-generated-session-secret
+
+# Production settings
 NODE_ENV=production
-SESSION_SECRET=your-super-secure-session-secret-key-here
-ALLOWED_ORIGINS=https://your-app.railway.app
+PORT=5000
+RATE_LIMIT_WINDOW_MS=900000
+RATE_LIMIT_MAX_REQUESTS=100
 ```
 
 ### **2.4 Deploy**
@@ -103,6 +109,21 @@ EXPO_PUBLIC_GOOGLE_CLIENT_ID=your-google-client-id
 
 ---
 
+## **🔧 Troubleshooting**
+
+### **If deployment fails:**
+1. Check Railway logs
+2. Verify environment variables
+3. Ensure MongoDB Atlas is accessible
+4. Make sure `server/package.json` exists
+
+### **If mobile app can't connect:**
+1. Verify Railway URL is correct
+2. Check if server is running (visit `/api/health`)
+3. Ensure CORS is configured properly
+
+---
+
 ## **✅ What You Get**
 
 - **🚀 Server runs 24/7** - No PC needed
@@ -111,20 +132,6 @@ EXPO_PUBLIC_GOOGLE_CLIENT_ID=your-google-client-id
 - **🔒 Secure HTTPS** - Professional security
 - **📊 Auto-scaling** - Handles multiple users
 - **💰 Free tier** - No cost for development
-
----
-
-## **🔧 Troubleshooting**
-
-### **If deployment fails:**
-1. Check Railway logs
-2. Verify environment variables
-3. Ensure MongoDB Atlas is accessible
-
-### **If mobile app can't connect:**
-1. Verify Railway URL is correct
-2. Check if server is running (visit `/api/health`)
-3. Ensure CORS is configured properly
 
 ---
 
