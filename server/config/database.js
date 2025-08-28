@@ -13,7 +13,6 @@ const connectDB = async () => {
       serverSelectionTimeoutMS: 10000,
       socketTimeoutMS: 45000,
       connectTimeoutMS: 10000,
-      bufferMaxEntries: 0,
     };
     
     // Railway environment detection with SSL bypass
