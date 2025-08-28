@@ -1,5 +1,5 @@
 const express = require('express');
-const Timetable = require('../models/Timetable');
+const { MockTimetable: Timetable } = require('../models/User-mock');
 const auth = require('../middleware/auth');
 
 const router = express.Router();

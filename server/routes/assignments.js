@@ -1,5 +1,5 @@
 const express = require('express');
-const Assignment = require('../models/Assignment');
+const { MockAssignment: Assignment } = require('../models/User-mock');
 const auth = require('../middleware/auth');
 
 const router = express.Router();

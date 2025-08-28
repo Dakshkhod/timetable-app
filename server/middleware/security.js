@@ -89,7 +89,7 @@ const generalLimiter = rateLimit({
  */
 const authLimiter = rateLimit({
   windowMs: parseInt(process.env.LOGIN_RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000, // 15 minutes
-  max: parseInt(process.env.LOGIN_RATE_LIMIT_MAX_ATTEMPTS) || 5,
+  max: parseInt(process.env.LOGIN_RATE_LIMIT_MAX_ATTEMPTS) || 100, // Increased for development
   message: {
     error: 'Too many authentication attempts',
     message: 'Account temporarily locked. Please try again later.',

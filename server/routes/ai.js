@@ -1,7 +1,5 @@
 const express = require('express');
-const Assignment = require('../models/Assignment');
-const Timetable = require('../models/Timetable');
-const User = require('../models/User');
+const { MockAssignment: Assignment, MockTimetable: Timetable, MockUser: User } = require('../models/User-mock');
 const auth = require('../middleware/auth');
 const GoogleClassroomService = require('../services/googleClassroom');
 const { refreshAccessToken } = require('../config/google');
@@ -455,7 +453,7 @@ async function getUserContext(user) {
 
     // Get user's timetable
     try {
-      const Assignment = require('../models/Assignment');
+      // Using MockAssignment from top of file
       const plannerTasks = await Assignment.find({
         assignedTo: user._id,
         status: { $ne: 'Completed' }
