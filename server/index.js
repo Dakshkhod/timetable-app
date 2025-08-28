@@ -20,7 +20,7 @@ const {
   helmetConfig,
   generalLimiter,
   authLimiter,
-  bruteForce,
+
   ipFilter,
   requestSizeLimit,
   validateUserAgent,
@@ -172,8 +172,7 @@ app.use(session({
 // Timing attack protection for auth routes
 app.use('/api/auth', timingAttackProtection);
 
-// Brute force protection for login
-app.use('/api/auth/login', bruteForce.prevent);
+// Brute force protection disabled for development
 
 // Routes
 app.use('/api/auth', require('./routes/auth'));

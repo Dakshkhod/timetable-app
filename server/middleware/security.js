@@ -1,7 +1,8 @@
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
-const ExpressBrute = require('express-brute');
-const ExpressBruteMongoStore = require('express-brute-mongo');
+// Brute force protection disabled for development
+// const ExpressBrute = require('express-brute');
+// const ExpressBruteMongoStore = require('express-brute-mongo');
 const mongoose = require('mongoose');
 const crypto = require('crypto');
 
@@ -107,33 +108,34 @@ const authLimiter = rateLimit({
 /**
  * Brute force protection for login attempts
  */
-let bruteStore;
-try {
-  if (mongoose.connection.readyState === 1) {
-    bruteStore = new ExpressBruteMongoStore(() => mongoose.connection.db.collection('bruteforce'));
-  }
-} catch (error) {
-  console.warn('MongoDB not available for brute force protection, using memory store');
-}
+// Brute force protection disabled for development
+// let bruteStore;
+// try {
+//   if (mongoose.connection.readyState === 1) {
+//     bruteStore = new ExpressBruteMongoStore(() => mongoose.connection.db.collection('bruteforce'));
+//   }
+// } catch (error) {
+//   console.warn('MongoDB not available for brute force protection, using memory store');
+// }
 
-const bruteForce = new ExpressBrute(bruteStore, {
-  freeRetries: 3,
-  minWait: 5 * 60 * 1000, // 5 minutes
-  maxWait: 60 * 60 * 1000, // 1 hour
-  lifetime: 24 * 60 * 60, // 1 day
-  failCallback: (req, res, next, nextValidRequestDate) => {
-    res.status(429).json({
-      error: 'Account temporarily locked',
-      message: 'Too many failed login attempts. Please try again later.',
-      nextValidRequestDate: nextValidRequestDate
-    });
-  },
-  handleStoreError: (error) => {
-    console.error('Brute force store error:', error);
-    // Continue without brute force protection if store fails
-    return false;
-  }
-});
+// const bruteForce = new ExpressBrute(bruteStore, {
+//   freeRetries: 3,
+//   minWait: 5 * 60 * 1000, // 5 minutes
+//   maxWait: 60 * 60 * 1000, // 1 hour
+//   lifetime: 24 * 60 * 60, // 1 day
+//   failCallback: (req, res, next, nextValidRequestDate) => {
+//     res.status(429).json({
+//       error: 'Account temporarily locked',
+//       message: 'Too many failed login attempts. Please try again later.',
+//       nextValidRequestDate: nextValidRequestDate
+//     });
+//   },
+//   handleStoreError: (error) => {
+//     console.error('Brute force store error:', error);
+//     // Continue without brute force protection if store fails
+//     return false;
+//   }
+// });
 
 /**
  * Advanced IP filtering and geo-blocking
@@ -329,7 +331,7 @@ module.exports = {
   helmetConfig,
   generalLimiter,
   authLimiter,
-  bruteForce,
+
   ipFilter,
   requestSizeLimit,
   validateUserAgent,
