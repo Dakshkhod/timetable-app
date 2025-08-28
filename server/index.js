@@ -10,6 +10,10 @@ const winston = require('winston');
 const connectDB = require('./config/database');
 
 // Production environment setup
+// Force disable SSL certificate validation for Railway deployment
+if (process.env.NODE_ENV === 'production') {
+  process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+}
 
 // Import security middleware
 const {
