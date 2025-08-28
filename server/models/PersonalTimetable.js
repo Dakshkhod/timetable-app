@@ -111,7 +111,7 @@ const personalTimetableSchema = new mongoose.Schema({
 });
 
 // Index for efficient queries
-personalTimetableSchema.index({ userId: 1 });
+// Removed userId index - field has unique: true which creates implicit index
 
 // Helper function to calculate duration between two times
 function calculateDuration(startTime, endTime) {

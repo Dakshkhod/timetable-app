@@ -2,11 +2,8 @@ const mongoose = require('mongoose');
 
 const connectDB = async () => {
   try {
-    const conn = await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/smart-timetable', {
-      // Use only basic, universally supported options
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    const conn = await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/smart-timetable');
+    // No deprecated options - using default modern settings
 
     console.log(`📦 MongoDB Connected: ${conn.connection.host}`);
     
