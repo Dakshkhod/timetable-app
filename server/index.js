@@ -160,31 +160,8 @@ app.use(session({
     maxAge: 15 * 60 * 1000, // 15 minutes
     sameSite: 'lax' // Changed from 'strict' to prevent issues
   },
-  store: (() => {
-    try {
-      // Try to create MongoDB session store
-      if (process.env.MONGODB_URI) {
-        return MongoStore.create({
-          mongoUrl: process.env.MONGODB_URI,
-          touchAfter: 24 * 3600, // lazy session update
-          crypto: {
-            secret: process.env.SESSION_SECRET || 'fallback-secret-change-in-production'
-          },
-          // Railway-specific MongoDB store options
-          mongoOptions: {
-            ssl: true,
-            sslValidate: false,
-            tlsAllowInvalidCertificates: true,
-            tlsAllowInvalidHostnames: true,
-            serverSelectionTimeoutMS: 5000,
-          }
-        });
-      }
-    } catch (error) {
-      console.warn('⚠️  MongoDB session store failed, using memory store');
-    }
-    return undefined; // Falls back to memory store
-  })()
+  // Use memory store for Railway to avoid MongoDB session issues
+  store: undefined
 }));
 
 // Timing attack protection for auth routes
